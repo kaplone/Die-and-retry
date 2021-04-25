@@ -10,18 +10,24 @@ import java.util.stream.Collectors;
 public class Choice {
     private int id;
     private String libelle;
+    private String giveState;
+    private List<String> needStates;
     private List<String> possibilities;
+    private String back;
     private Boolean oneTime;
 
     public Choice(){
 
     }
 
-    public Choice(int id, String libelle, List<String> possibilities, Boolean oneTime) {
+    public Choice(int id, String libelle, List<String> possibilities, Boolean oneTime, String giveState, List<String> needStates, String back) {
         this.id = id;
         this.libelle = libelle;
         this.possibilities = possibilities;
+        this.giveState = giveState;
+        this.needStates = needStates;
         this.oneTime = oneTime;
+        this.back = back;
     }
 
     public List<String> getPossibilities() {
@@ -60,12 +66,39 @@ public class Choice {
         return possibilities.stream().map(c -> c.startsWith("$") ? Referee.choices.get(Integer.parseInt(c.split("\\$")[1])).getLibelle() : c).collect(Collectors.joining("#"));
     }
 
+    public String getGiveState() {
+        return giveState;
+    }
+
+    public void setGiveState(String giveState) {
+        this.giveState = giveState;
+    }
+
+    public String getBack() {
+        return back;
+    }
+
+    public void setBack(String back) {
+        this.back = back;
+    }
+
+    public List<String> getNeedStates() {
+        return needStates;
+    }
+
+    public void setNeedStates(List<String> needStates) {
+        this.needStates = needStates;
+    }
+
     @Override
     public String toString() {
         return "" + id +
                 "_" + libelle +
-                "_" + possibilities.stream().collect(Collectors.joining("#")) +
-                "_" + oneTime
+                "_" + String.join("#", possibilities) +
+                "_" + back +
+                "_" + oneTime +
+                "_" + giveState +
+                "_" + String.join("#", needStates)
                 ;
     }
 }

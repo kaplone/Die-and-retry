@@ -1,1 +1,0 @@
-{"title":{"1":"test_01_01","2":"test_02_02"},"testIn":"10\n4\n0_Start_$1#$2_true\n1_Open the window_It's locked_false\n2_Look around_$3#Take the phone#Take the gloves_true\n3_Take the keys_Ouch! Too hot!#Open the closet#$1_false","validator":true,"test":true}

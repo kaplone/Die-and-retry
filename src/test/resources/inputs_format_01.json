@@ -9,35 +9,91 @@
         "$1",
         "$2"
         ],
-      "oneTime" : true
+      "back" : "None",
+      "oneTime" : true,
+      "giveState" : "Started",
+      "needStates" : [
+        "None"
+      ]
     },
     {
       "id" : 1,
       "libelle" : "Open the window",
       "possibilities" : [
-        "It's locked"
+        "None"
       ],
-      "oneTime" : false
+      "back" : "It's locked",
+      "oneTime" : false,
+      "giveState" : "None",
+      "needStates" : [
+        "None"
+      ]
     },
     {
       "id" : 2,
       "libelle" : "Look around",
       "possibilities" : [
+        "$1",
         "$3",
+        "$5",
         "Take the phone",
         "Take the gloves"
       ],
-      "oneTime" : true
+      "back" : "None",
+      "oneTime" : true,
+      "giveState" : "Observation",
+      "needStates" : [
+          "None"
+      ]
     },
     {
       "id" : 3,
       "libelle" : "Take the keys",
       "possibilities" : [
-        "Ouch! Too hot!",
-        "Open the closet",
+        "$5",
         "$1"
         ],
-      "oneTime" : false
+      "back" : "Ouch! Too hot!",
+      "oneTime" : false,
+      "giveState" : "Have keys",
+      "needStates" : [
+        "Observation",
+        "Have gloves"
+      ]
+    }
+  ,
+    {
+      "id" : 4,
+      "libelle" : "Take the gloves",
+      "possibilities" : [
+        "$5",
+        "$1"
+      ],
+      "back" : "None",
+      "oneTime" : false,
+      "giveState" : "Have keys",
+      "needStates" : [
+        "Observation",
+        "Have glove"
+      ]
+    }
+  ,
+    {
+      "id" : 5,
+      "libelle" : "Open the closet",
+      "possibilities" : [
+        "Turn off the gaz",
+        "take the extinctor",
+        "$1"
+      ],
+      "back" : "It's locked",
+      "oneTime" : false,
+      "giveState" : "Closet open",
+      "needStates" : [
+        "Observation",
+        "Have glove",
+        "Have keys"
+      ]
     }
   ]
 }
