@@ -1,5 +1,3 @@
-package com.codingame.game;
-
 import com.codingame.gameengine.runner.SoloGameRunner;
 
 public class Main {

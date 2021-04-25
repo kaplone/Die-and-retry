@@ -1,0 +1,43 @@
+{
+  "maxTurns" : 10,
+  "choicesCount" : 4,
+  "choices" : [
+    {
+      "id" : 0,
+      "libelle" : "Start",
+      "possibilities" : [
+        "$1",
+        "$2"
+        ],
+      "oneTime" : true
+    },
+    {
+      "id" : 1,
+      "libelle" : "Open the window",
+      "possibilities" : [
+        "It's locked"
+      ],
+      "oneTime" : false
+    },
+    {
+      "id" : 2,
+      "libelle" : "Look around",
+      "possibilities" : [
+        "$3",
+        "Take the phone",
+        "Take the gloves"
+      ],
+      "oneTime" : true
+    },
+    {
+      "id" : 3,
+      "libelle" : "Take the keys",
+      "possibilities" : [
+        "Ouch! Too hot!",
+        "Open the closet",
+        "$1"
+        ],
+      "oneTime" : false
+    }
+  ]
+}
