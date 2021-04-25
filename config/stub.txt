@@ -1,0 +1,8 @@
+read eggsCount:int
+loop eggsCount read eggX:int eggY:int eggQuantity:int
+gameloop
+read fishX:int fishY:int
+write STILL
+
+OUTPUT
+UP | DOWN | STILL
