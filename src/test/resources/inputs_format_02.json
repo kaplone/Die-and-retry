@@ -1,0 +1,131 @@
+{
+  "maxTurns" : 10,
+  "elementsCount" : 5,
+  "elements" : [
+    { "xPos" : 100,
+      "yPos" : 900,
+      "xRank" : 0,
+      "yOffset" : 25,
+      "id" : "E_01",
+      "libelle" :  "GOAT",
+      "statesCount" : 1,
+      "states" : [
+        {
+          "id" : "S_01",
+          "libelle" : "WEST"
+        }
+      ]
+    },
+    { "xPos" : 100,
+      "yPos" : 900,
+      "xRank" : 1,
+      "yOffset" : 40,
+      "id" : "E_02",
+      "libelle" :  "WOLF",
+      "statesCount" : 1,
+      "states" : [
+        {
+          "id" : "S_01",
+          "libelle" : "WEST"
+        }
+      ]
+    }
+  ,
+    { "xPos" : 100,
+      "yPos" : 900,
+      "xRank" : 2,
+      "yOffset" : -50,
+      "id" : "E_03",
+      "libelle" :  "MAN",
+      "statesCount" : 1,
+      "states" : [
+        {
+          "id" : "S_01",
+          "libelle" : "WEST"
+        }
+      ]
+    }
+  ,
+    { "xPos" : 100,
+      "yPos" : 900,
+      "xRank" : 3,
+      "yOffset" : 50,
+      "id" : "E_04",
+      "libelle" :  "CABBAGE",
+      "statesCount" : 1,
+      "states" : [
+        {
+          "id" : "S_01",
+          "libelle" : "WEST"
+        }
+      ]
+    }
+  ,
+    { "xPos" : 100,
+      "yPos" : 900,
+      "xRank" : 7,
+      "yOffset" : 0,
+      "id" : "E_05",
+      "libelle" :  "BOAT",
+      "statesCount" : 2,
+      "states" : [
+        {
+          "id" : "S_01",
+          "libelle" : "WEST"
+        },
+        {
+          "id" : "S_02",
+          "libelle" : "BOUND"
+        }
+      ]
+    }
+  ],
+  "actionsCount" : 2,
+  "actions" : [
+    {
+      "id" : "A_01",
+      "libelle" : "Onboard the goat",
+      "conditionsToDisplayCount" : 5,
+      "conditionsToDisplay" : [
+        "AND-NOT-E_01-S_05",
+        "AND-CONTAINSSTATE-E_01-E_05",
+        "AND-NOT-E_02-S_05",
+        "AND-NOT-E_03-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : ["NONE"],
+      "element" : "E_01",
+      "stateToAdd" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      },
+      "stateToRemove" : null
+    },
+    {
+      "id" : "A_02",
+      "libelle" : "Unboard the goat",
+      "conditionsToDisplayCount" : 2,
+      "conditionsToDisplay" : [
+        "AND-OK-E_01-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 3,
+      "conditionsToDie" : [
+        "OR-CONTAINSSTATE-E_01-E_02",
+        "OR-CONTAINSSTATE-E_01-E_03",
+        "AND-NOTCONTAINSSTATE-E_01-E_05"
+      ],
+      "element" : "E_01",
+      "stateToAdd" : null,
+        "stateToRemove" : {
+          "id" : "S_05",
+          "libelle" : "ONBOARD"
+        }
+    }
+  ]
+}

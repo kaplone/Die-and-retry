@@ -9,5 +9,12 @@ public class Constants {
 
     public static final int CELL_SIZE = 101;
 
+    public static final String CABBAGE_SPRITE = "cabbage_01.png";
+    public static final String GOAT_SPRITE = "goat_01.png";
+    public static final String WOLF_SPRITE = "wolf_01.png";
+    public static final String MAN_SPRITE = "man_01.png";
+    public static final String BOAT_SPRITE = "boat_04.png";
+    public static final String RIVER_SPRITE = "river_04.png";
+
     public static final String[] ACTIONS = new String[] {  };
 }

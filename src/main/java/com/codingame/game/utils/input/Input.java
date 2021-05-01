@@ -1,9 +1,9 @@
-package com.codingame.game.utils;
+package com.codingame.game.utils.input;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InputModel {
+public class Input {
 
     Map<Integer, String> title = new HashMap<>();
     String testIn;
