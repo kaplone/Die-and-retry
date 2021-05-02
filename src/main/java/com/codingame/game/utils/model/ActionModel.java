@@ -26,6 +26,46 @@ public class ActionModel {
         this.stateToRemove = stateToRemove;
     }
 
+    public boolean anyOKForDie(){
+        boolean res = true;
+        boolean cond = false;
+
+        for (String s : conditionsToDisplay){
+            //System.err.println(s);
+            String booleanOperator = s.split("-")[0];
+            String condition = s.split("-")[1];
+            String element = s.split("-")[2];
+            String state = s.split("-")[3];
+
+            ElementModel elementModel = Referee.elementsById.get(element);
+
+            switch (condition){
+                case "OK" : cond = elementModel.containsState(state);
+                    break;
+                case "NOT" : cond = !elementModel.containsState(state);
+                    break;
+                case "SAMESTATE" : ElementModel elementModel2 = Referee.elementsById.get(element);
+                    cond = elementModel.containsState(elementModel2.getStates().iterator().next().getId());
+                    break;
+                case "NOTSAMESTATE" : ElementModel elementModel3 = Referee.elementsById.get(element);
+                    cond = !elementModel.containsState(elementModel3.getStates().iterator().next().getId());
+                    break;
+            }
+
+
+
+            res = booleanOperator.equals("AND") ? res && cond : res || cond;
+        }
+        System.err.println(libelle + " Res = " + res);
+
+        return res;
+    }
+
+    public boolean allOKForOk(){
+
+        return true;
+    }
+
     public boolean allOKForDisplay(){
         boolean res = true;
         boolean cond = false;
@@ -55,11 +95,11 @@ public class ActionModel {
                     break;
             }
 
-            //System.err.println(condition + " " + cond + " Res = " + res);
+
 
             res = booleanOperator.equals("AND") ? res && cond : res || cond;
         }
-
+        System.err.println(libelle + " Res = " + res);
         return res;
     }
 

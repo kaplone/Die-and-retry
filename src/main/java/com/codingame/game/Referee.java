@@ -79,11 +79,7 @@ public class Referee extends AbstractReferee {
             int xRank = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex).split(" ")[4]);
             int yOffset = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex).split(" ")[5]);
             int statesCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex).split(" ")[6]);
-            //List<String> next = Arrays.asList(gameManager.getTestCaseInput().get(readLineIndex).split("_")[2].split("#"));
-            //String back = gameManager.getTestCaseInput().get(readLineIndex).split("_")[3];
-            //Boolean unique = Boolean.valueOf(gameManager.getTestCaseInput().get(readLineIndex).split("_")[4]);
-            //String giveState = gameManager.getTestCaseInput().get(readLineIndex).split("_")[5];
-            //List<String> needStates = Arrays.asList(gameManager.getTestCaseInput().get(readLineIndex).split("_")[6].split("#"));
+
             Set<StateModel> states = new HashSet<>();
 
             for (int j = 0; j < statesCount; j++){
@@ -215,19 +211,7 @@ public class Referee extends AbstractReferee {
                 StateModel stateModel = new StateModel(idState, libelleState);
                 statesById.put(idState, stateModel);
             }
-
-
-
-
         }
-
-
-
-
-
-        //currentChoice = choices.get(0);
-
-
     }
 
     @Override
@@ -243,7 +227,7 @@ public class Referee extends AbstractReferee {
             }
         }
 
-        System.err.println(actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
+        System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
 
         aviable = actionsPossibles.stream().map(ActionModel::getId).collect(Collectors.toList());
         gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining("#")));
@@ -264,12 +248,8 @@ public class Referee extends AbstractReferee {
             System.err.println("Process Output = " + output);
             ActionModel actionOutput = actionsById.get(output);
             ElementModel elementOutput = elementsById.get(actionOutput.getElement());
-            System.err.println("Process element = " + elementOutput);
-            System.err.println("Process actionOutput.getStateToAdd() = " + actionOutput.getStateToAdd());
             StateModel stateOutputToAdd = statesById.get(actionOutput.getStateToAdd());
-            //System.err.println("Process stateOutputToAdd.getLibelle() = " + stateOutputToAdd.getLibelle());
             elementOutput.addState(stateOutputToAdd);
-            System.err.println("Process actionOutput.getStateToRemove() = " + actionOutput.getStateToRemove());
             elementOutput.removeState(statesById.get(actionOutput.getStateToRemove()));
 
             System.err.println(elementOutput.getStates().stream().map(stateModel -> stateModel.getLibelle()).collect(Collectors.toList()));
@@ -311,7 +291,9 @@ public class Referee extends AbstractReferee {
         System.err.println(outputs);
         if (outputs.size() != 1) {
             gameManager.loseGame("You did not send 1 output in your turn.");
-        } else {
+        }
+
+        else {
             String output = outputs.get(0);
 //            System.err.println("Here aviable =" + aviable);
 //            System.err.println("Here output =" + output);
@@ -324,7 +306,11 @@ public class Referee extends AbstractReferee {
                                         output
                                 )
                         );
-            } else {
+            }
+            else if (actionsById.get(outputs.get(0)).anyOKForDie()){
+                gameManager.loseGame("You died.");
+            }
+            else {
                 return output;
             }
         }

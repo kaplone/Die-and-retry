@@ -7,7 +7,7 @@ import java.util.Scanner;
  * Goes to the closest reachable eggs.
  */
 
-public class Solution_cross {
+public class Solution_die_and_retry {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -19,8 +19,8 @@ public class Solution_cross {
             String input = scanner.nextLine();
 
             List<String> inChoices = Arrays.asList(input.split("#"));
-            System.err.println("Choix = " + inChoices);
-            System.out.println(inChoices.get(0));
+            System.err.println("Choix possibles = " + inChoices);
+            System.out.println(inChoices.get(inChoices.size() - 1));
         }
 
 

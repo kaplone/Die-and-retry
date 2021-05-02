@@ -80,7 +80,7 @@
       ]
     }
   ],
-  "actionsCount" : 2,
+  "actionsCount" : 8,
   "actions" : [
     {
       "id" : "A_01",
@@ -126,6 +126,138 @@
           "id" : "S_05",
           "libelle" : "ONBOARD"
         }
+    },
+    {
+      "id" : "A_03",
+      "libelle" : "Onboard the wolf",
+      "conditionsToDisplayCount" : 5,
+      "conditionsToDisplay" : [
+        "AND-NOT-E_01-S_05",
+        "AND-CONTAINSSTATE-E_02-E_05",
+        "AND-NOT-E_02-S_05",
+        "AND-NOT-E_03-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : ["NONE"],
+      "element" : "E_02",
+      "stateToAdd" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      },
+      "stateToRemove" : null
+    },
+    {
+      "id": "A_04",
+      "libelle": "Unboard the wofl",
+      "conditionsToDisplayCount": 2,
+      "conditionsToDisplay": [
+        "AND-OK-E_02-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount": 1,
+      "conditionsToOk": [
+        "NONE"
+      ],
+      "conditionsToDieCount": 2,
+      "conditionsToDie": [
+        "OR-CONTAINSSTATE-E_01-E_02",
+        "AND-NOTCONTAINSSTATE-E_01-E_05"
+      ],
+      "element": "E_02",
+      "stateToAdd": null,
+      "stateToRemove": {
+        "id": "S_05",
+        "libelle": "ONBOARD"
+      }
+    },
+    {
+      "id" : "A_05",
+      "libelle" : "Onboard the cabbage",
+      "conditionsToDisplayCount" : 5,
+      "conditionsToDisplay" : [
+        "AND-NOT-E_01-S_05",
+        "AND-CONTAINSSTATE-E_03-E_05",
+        "AND-NOT-E_02-S_05",
+        "AND-NOT-E_03-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : ["NONE"],
+      "element" : "E_03",
+      "stateToAdd" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      },
+      "stateToRemove" : null
+    },
+    {
+      "id" : "A_06",
+      "libelle" : "Unboard the cabbage",
+      "conditionsToDisplayCount" : 2,
+      "conditionsToDisplay" : [
+        "AND-OK-E_03-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 2,
+      "conditionsToDie" : [
+        "OR-CONTAINSSTATE-E_01-E_03",
+        "AND-NOTCONTAINSSTATE-E_01-E_05"
+      ],
+      "element" : "E_03",
+      "stateToAdd" : null,
+      "stateToRemove" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      }
+    },
+    {
+      "id" : "A_07",
+      "libelle" : "Onboard the man",
+      "conditionsToDisplayCount" : 3,
+      "conditionsToDisplay" : [
+        "AND-NOT-E_04-S_05",
+        "AND-CONTAINSSTATE-E_04-E_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 2,
+      "conditionsToDie" : [
+        "OR-CONTAINSSTATE-E_01-E_02",
+        "OR-CONTAINSSTATE-E_01-E_03"
+      ],
+      "element" : "E_04",
+      "stateToAdd" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      },
+      "stateToRemove" : null
+    },
+    {
+      "id" : "A_08",
+      "libelle" : "Unboard the man",
+      "conditionsToDisplayCount" : 2,
+      "conditionsToDisplay" : [
+        "AND-OK-E_04-S_05",
+        "AND-OK-E_05-S_02"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : ["NONE"],
+      "element" : "E_04",
+      "stateToAdd" : null,
+      "stateToRemove" : {
+        "id" : "S_05",
+        "libelle" : "ONBOARD"
+      }
     }
   ]
 }
