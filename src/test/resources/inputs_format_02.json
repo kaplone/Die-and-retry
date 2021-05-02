@@ -1,5 +1,5 @@
 {
-  "maxTurns" : 10,
+  "maxTurns" : 100,
   "elementsCount" : 5,
   "elements" : [
     { "xPos" : 100,
@@ -35,7 +35,7 @@
       "yPos" : 900,
       "xRank" : 2,
       "yOffset" : -50,
-      "id" : "E_03",
+      "id" : "E_04",
       "libelle" :  "MAN",
       "statesCount" : 1,
       "states" : [
@@ -50,7 +50,7 @@
       "yPos" : 900,
       "xRank" : 3,
       "yOffset" : 50,
-      "id" : "E_04",
+      "id" : "E_03",
       "libelle" :  "CABBAGE",
       "statesCount" : 1,
       "states" : [
@@ -80,7 +80,7 @@
       ]
     }
   ],
-  "actionsCount" : 8,
+  "actionsCount" : 10,
   "actions" : [
     {
       "id" : "A_01",
@@ -257,6 +257,52 @@
       "stateToRemove" : {
         "id" : "S_05",
         "libelle" : "ONBOARD"
+      }
+    },
+    {
+      "id" : "A_09",
+      "libelle" : "cross the river west to east",
+      "conditionsToDisplayCount" : 1,
+      "conditionsToDisplay" : [
+        "AND-OK-E_05-S_01"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : [
+        "AND-OK-E_04-S_05"
+      ],
+      "element" : "E_05",
+      "stateToAdd" : {
+        "id" : "S_03",
+        "libelle" : "EAST"
+      },
+      "stateToRemove" : {
+        "id" : "S_01",
+        "libelle" : "WEST"
+      }
+    },
+    {
+      "id" : "A_10",
+      "libelle" : "cross the river east to west",
+      "conditionsToDisplayCount" : 1,
+      "conditionsToDisplay" : [
+        "AND-OK-E_05-S_03"
+      ],
+      "conditionsToOkCount" : 1,
+      "conditionsToOk" : ["NONE"],
+      "conditionsToDieCount" : 1,
+      "conditionsToDie" : [
+        "AND-OK-E_04-S_05"
+      ],
+      "element" : "E_05",
+      "stateToAdd" : {
+        "id" : "S_01",
+        "libelle" : "WEST"
+      },
+      "stateToRemove" : {
+        "id" : "S_03",
+        "libelle" : "EAST"
       }
     }
   ]

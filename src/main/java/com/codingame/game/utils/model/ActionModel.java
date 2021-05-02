@@ -27,10 +27,10 @@ public class ActionModel {
     }
 
     public boolean anyOKForDie(){
-        boolean res = true;
+        boolean res = false;
         boolean cond = false;
 
-        for (String s : conditionsToDisplay){
+        for (String s : conditionsToDie){
             //System.err.println(s);
             String booleanOperator = s.split("-")[0];
             String condition = s.split("-")[1];
@@ -56,7 +56,10 @@ public class ActionModel {
 
             res = booleanOperator.equals("AND") ? res && cond : res || cond;
         }
-        System.err.println(libelle + " Res = " + res);
+        if (res){
+            System.err.println(libelle + " Res = " + res);
+        }
+
 
         return res;
     }

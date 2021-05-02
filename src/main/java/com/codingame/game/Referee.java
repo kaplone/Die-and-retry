@@ -23,6 +23,9 @@ public class Referee extends AbstractReferee {
     private static Choice currentChoice = null;
     private static Choice previousChoice = null;
 
+    private boolean died = false;
+    private boolean retry = false;
+
     public static Map<Integer, Choice> choices;
     static List<String> aviable = new ArrayList<>();
     static List<String> statesReached = new ArrayList<>();
@@ -33,9 +36,11 @@ public class Referee extends AbstractReferee {
 
     private static Sprite man;
     private static Sprite goat;
+
     private static Sprite wolf;
     private static Sprite cabbage;
     private static Sprite boat;
+    private static Sprite boat_border;
 
     private  static String request = "";
     private  static String response = "";
@@ -71,7 +76,7 @@ public class Referee extends AbstractReferee {
         readLineIndex++; //  2
 
         for (int i = 0; i < elementsCount; i++){
-            System.err.println(gameManager.getTestCaseInput().get(readLineIndex));
+            //System.err.println(gameManager.getTestCaseInput().get(readLineIndex));
             String id = gameManager.getTestCaseInput().get(readLineIndex).split(" ")[0];
             String libelle = gameManager.getTestCaseInput().get(readLineIndex).split(" ")[1];
             int xPos = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex).split(" ")[2]);
@@ -139,7 +144,13 @@ public class Referee extends AbstractReferee {
                                 .setX(elementsByLibelle.get("BOAT").getX())
                                 .setY(elementsByLibelle.get("BOAT").getY())
                                 .setAnchor(.5)
-                                .setZIndex(2000);
+                                .setZIndex(1000);
+                        boat_border = graphicEntityModule.createSprite().setImage(Constants.BOAT_BORDER_SPRITE)
+                                .setScale(0.2)
+                                .setX(elementsByLibelle.get("BOAT").getX())
+                                .setY(elementsByLibelle.get("BOAT").getY())
+                                .setAnchor(.5)
+                                .setZIndex(5000);
                         break;
                     default:
 
@@ -157,10 +168,10 @@ public class Referee extends AbstractReferee {
         readLineIndex++;
         for (int a = 0; a < actionsCount; a++){
             String idAction = gameManager.getTestCaseInput().get(readLineIndex);
-            System.err.println("idAction : "  + idAction);
+            //System.err.println("idAction : "  + idAction);
             readLineIndex++;
             String libelleAction = gameManager.getTestCaseInput().get(readLineIndex);
-            System.err.println("libelleAction : "  + libelleAction);
+            //System.err.println("libelleAction : "  + libelleAction);
             readLineIndex++;
             Integer conditionsToDisplayCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
             readLineIndex++;
@@ -227,7 +238,7 @@ public class Referee extends AbstractReferee {
             }
         }
 
-        System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
+        //System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
 
         aviable = actionsPossibles.stream().map(ActionModel::getId).collect(Collectors.toList());
         gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining("#")));
@@ -245,16 +256,25 @@ public class Referee extends AbstractReferee {
                 throw new TimeoutException();
             }
 
-            System.err.println("Process Output = " + output);
-            ActionModel actionOutput = actionsById.get(output);
-            ElementModel elementOutput = elementsById.get(actionOutput.getElement());
-            StateModel stateOutputToAdd = statesById.get(actionOutput.getStateToAdd());
-            elementOutput.addState(stateOutputToAdd);
-            elementOutput.removeState(statesById.get(actionOutput.getStateToRemove()));
+            System.err.println("Output = " + output + " / Died = " + died);
 
-            System.err.println(elementOutput.getStates().stream().map(stateModel -> stateModel.getLibelle()).collect(Collectors.toList()));
+            if (!died) {
+                //System.err.println("Process Output = " + output);
+                ActionModel actionOutput = actionsById.get(output);
+                ElementModel elementOutput = elementsById.get(actionOutput.getElement());
+                StateModel stateOutputToAdd = statesById.get(actionOutput.getStateToAdd());
+                elementOutput.addState(stateOutputToAdd);
+                elementOutput.removeState(statesById.get(actionOutput.getStateToRemove()));
 
-            request = outputs.get(0);
+                //System.err.println(elementOutput.getStates().stream().map(stateModel -> stateModel.getLibelle()).collect(Collectors.toList()));
+                request = outputs.get(0);
+
+            }
+            else {
+                request = outputs.get(0);
+                died = false;
+                retry = true;
+            }
 
 
 
@@ -279,6 +299,98 @@ public class Referee extends AbstractReferee {
 
     public void updateView(){
 
+        System.err.println("Request = " + request);
+
+        ElementModel goatElement = elementsById.get("E_01");
+        ElementModel wolfElement = elementsById.get("E_02");
+        ElementModel cabbageElement = elementsById.get("E_03");
+        ElementModel manElement = elementsById.get("E_04");
+        ElementModel boatElement = elementsById.get("E_05");
+        switch (request){
+            case "A_01" :
+                if (goatElement.containsState("S_01")){
+                    goat.setX(goatElement.getxPos() + 750 , Curve.LINEAR);
+                    goat.setY(goatElement.getyPos() + goatElement.getyOffset() -50 , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_02" :
+                if (goatElement.containsState("S_01")){
+                    goat.setX(goatElement.getxPos() + goatElement.getxRank() * 100 , Curve.LINEAR);
+                    goat.setY(goatElement.getyPos() + goatElement.getyOffset() , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_03" :
+                if (wolfElement.containsState("S_01")){
+                    wolf.setImage(Constants.WOLF_CUT_SPRITE);
+                    wolf.setX(wolfElement.getxPos() + 750 , Curve.LINEAR);
+                    wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() -50 , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_04" :
+                if (wolfElement.containsState("S_01")){
+                    wolf.setImage(Constants.WOLF_SPRITE);
+                    wolf.setX(wolfElement.getxPos() + wolfElement.getxRank() * 100 , Curve.LINEAR);
+                    wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_05" :
+                if (cabbageElement.containsState("S_01")){
+                    cabbage.setX(cabbageElement.getxPos() + 750 , Curve.LINEAR);
+                    cabbage.setY(cabbageElement.getyPos() +cabbageElement.getyOffset() -50 , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_06" :
+                if (cabbageElement.containsState("S_01")){
+                    cabbage.setX(cabbageElement.getxPos() + cabbageElement.getxRank() * 100 , Curve.LINEAR);
+                    cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_07" :
+                if (manElement.containsState("S_01")){
+                    man.setX(manElement.getxPos() + 650 , Curve.LINEAR);
+                    man.setY(manElement.getyPos() + manElement.getyOffset() -50 , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+            case "A_08" :
+                if (manElement.containsState("S_01")){
+                    man.setX(manElement.getxPos() + manElement.getxRank() * 100 , Curve.LINEAR);
+                    man.setY(manElement.getyPos() + manElement.getyOffset() , Curve.LINEAR);
+
+                }
+                else {
+
+                }
+                break;
+        }
+
 
     }
 
@@ -288,7 +400,7 @@ public class Referee extends AbstractReferee {
     }
 
     private String checkOutput(List<String> outputs) {
-        System.err.println(outputs);
+        //System.err.println(outputs);
         if (outputs.size() != 1) {
             gameManager.loseGame("You did not send 1 output in your turn.");
         }
@@ -308,7 +420,14 @@ public class Referee extends AbstractReferee {
                         );
             }
             else if (actionsById.get(outputs.get(0)).anyOKForDie()){
-                gameManager.loseGame("You died.");
+
+                // --> retry
+
+                died = true;
+                // reinit states
+                elementsById = new HashMap<>(elements_start);
+                return output;
+
             }
             else {
                 return output;

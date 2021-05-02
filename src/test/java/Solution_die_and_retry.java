@@ -20,7 +20,10 @@ public class Solution_die_and_retry {
 
             List<String> inChoices = Arrays.asList(input.split("#"));
             System.err.println("Choix possibles = " + inChoices);
-            System.out.println(inChoices.get(inChoices.size() - 1));
+//            System.out.println(inChoices.get(inChoices.size() - 1));
+            int indexRandom = Math.max(0, (int) Math.round(Math.random() * inChoices.size() - 1));
+            System.err.println("index random = " + indexRandom);
+            System.out.println(inChoices.get(indexRandom));
         }
 
 
