@@ -17,6 +17,7 @@ public class Constants {
     public static final String BOAT_SPRITE = "boat_04.png";
     public static final String BOAT_BORDER_SPRITE = "boat_10.png";
     public static final String RIVER_SPRITE = "river_04.png";
+    public static final String RETRY_SPRITE = "retry_01.png";
 
     public static final String[] ACTIONS = new String[] {  };
 }

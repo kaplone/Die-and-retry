@@ -42,7 +42,7 @@ public class ElementModel {
 
     public void removeState(StateModel s){
         if(s != null){
-            System.err.println("To search for remove = " + s.getId());
+            //System.err.println("To search for remove = " + s.getId());
 
             StateModel stateToremove = states.stream().filter(st -> st.getId().equals(s.getId())).findFirst().orElse(null);
             if (stateToremove != null){

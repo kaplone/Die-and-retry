@@ -42,6 +42,8 @@ public class Referee extends AbstractReferee {
     private static Sprite boat;
     private static Sprite boat_border;
 
+    private static Sprite retryText;
+
     private  static String request = "";
     private  static String response = "";
 
@@ -57,6 +59,8 @@ public class Referee extends AbstractReferee {
 
     public static Map<String, StateModel> statesById;
 
+    public static ActionModel dieAndRetry;
+
     @Override
     public void init() {
         gameManager.setFrameDuration(500);
@@ -67,6 +71,16 @@ public class Referee extends AbstractReferee {
         actions = new ArrayList<>();
         actionsById = new HashMap<>();
         statesById = new HashMap<>();
+
+        dieAndRetry = new ActionModel("A_00", "DIE AND RETRY", null, null, null, null, null, null);
+
+        retryText = graphicEntityModule.createSprite().setImage(Constants.RETRY_SPRITE)
+                .setScale(0.2)
+                .setAlpha(0)
+                .setX(graphicEntityModule.getWorld().getWidth()/2)
+                .setY(graphicEntityModule.getWorld().getHeight()/2)
+                .setAnchor(.5)
+                .setZIndex(10000);
 
         // general definitions
         Integer maxTurnsCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
@@ -186,8 +200,8 @@ public class Referee extends AbstractReferee {
             readLineIndex++;
             List<String> condToOk = new ArrayList<>();
             for (int c1 = 0; c1 < conditionsToOkCount; c1++){
-                String condToDisplay = gameManager.getTestCaseInput().get(readLineIndex);
-
+                String condToOk_ = gameManager.getTestCaseInput().get(readLineIndex);
+                condToOk.add(condToOk_);
                 readLineIndex++;
             }
 
@@ -195,8 +209,8 @@ public class Referee extends AbstractReferee {
             readLineIndex++;
             List<String> condToDie = new ArrayList<>();
             for (int c1 = 0; c1 < conditionsToDieCount; c1++){
-                String condToDisplay = gameManager.getTestCaseInput().get(readLineIndex);
-
+                String condToDie_ = gameManager.getTestCaseInput().get(readLineIndex);
+                condToDie.add(condToDie_);
                 readLineIndex++;
             }
             String element = gameManager.getTestCaseInput().get(readLineIndex);
@@ -232,11 +246,20 @@ public class Referee extends AbstractReferee {
 
 
         List<ActionModel> actionsPossibles = new ArrayList<>();
-        for (ActionModel action : actions){
-            if (action.allOKForDisplay()){
-                actionsPossibles.add(action);
+
+        if (died){
+            actionsPossibles.add(dieAndRetry);
+            died = false;
+        }
+        else {
+            for (ActionModel action : actions){
+                if (action.allOKForDisplay()){
+                    actionsPossibles.add(action);
+                }
             }
         }
+
+
 
         //System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
 
@@ -258,7 +281,7 @@ public class Referee extends AbstractReferee {
 
             System.err.println("Output = " + output + " / Died = " + died);
 
-            if (!died) {
+            if (!died && !outputs.get(0).equals("A_00")) {
                 //System.err.println("Process Output = " + output);
                 ActionModel actionOutput = actionsById.get(output);
                 ElementModel elementOutput = elementsById.get(actionOutput.getElement());
@@ -272,8 +295,7 @@ public class Referee extends AbstractReferee {
             }
             else {
                 request = outputs.get(0);
-                died = false;
-                retry = true;
+
             }
 
 
@@ -299,99 +321,217 @@ public class Referee extends AbstractReferee {
 
     public void updateView(){
 
-        System.err.println("Request = " + request);
+        System.err.println("Request = " + request + "  Died = " + died + "    Retry = " + retry);
 
-        ElementModel goatElement = elementsById.get("E_01");
-        ElementModel wolfElement = elementsById.get("E_02");
-        ElementModel cabbageElement = elementsById.get("E_03");
-        ElementModel manElement = elementsById.get("E_04");
-        ElementModel boatElement = elementsById.get("E_05");
-        switch (request){
-            case "A_01" :
-                if (goatElement.containsState("S_01")){
-                    goat.setX(goatElement.getxPos() + 750 , Curve.LINEAR);
-                    goat.setY(goatElement.getyPos() + goatElement.getyOffset() -50 , Curve.LINEAR);
+            retryText.setAlpha(0, Curve.LINEAR)
+                    .setScale(0.2, Curve.LINEAR);
 
-                }
-                else {
+            ElementModel goatElement = elementsById.get("E_01");
+            ElementModel wolfElement = elementsById.get("E_02");
+            ElementModel cabbageElement = elementsById.get("E_03");
+            ElementModel manElement = elementsById.get("E_04");
+            ElementModel boatElement = elementsById.get("E_05");
+            switch (request) {
+                case "A_00":
+                    reinit();
+                    break;
+                case "A_01":
+                    if (goatElement.containsState("S_01")) {
+                        goat.setX(goatElement.getxPos() + 750, Curve.LINEAR);
+                        goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
 
-                }
-                break;
-            case "A_02" :
-                if (goatElement.containsState("S_01")){
-                    goat.setX(goatElement.getxPos() + goatElement.getxRank() * 100 , Curve.LINEAR);
-                    goat.setY(goatElement.getyPos() + goatElement.getyOffset() , Curve.LINEAR);
+                    } else {
 
-                }
-                else {
+                    }
+                    break;
+                case "A_02":
+                    if (goatElement.containsState("S_01")) {
+                        goat.setX(goatElement.getxPos() + goatElement.getxRank() * 100, Curve.LINEAR);
+                        goat.setY(goatElement.getyPos() + goatElement.getyOffset(), Curve.LINEAR);
 
-                }
-                break;
-            case "A_03" :
-                if (wolfElement.containsState("S_01")){
-                    wolf.setImage(Constants.WOLF_CUT_SPRITE);
-                    wolf.setX(wolfElement.getxPos() + 750 , Curve.LINEAR);
-                    wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() -50 , Curve.LINEAR);
+                    } else {
+                        goat.setX(goatElement.getxPos() + 1500 + goatElement.getxRank() * 100, Curve.LINEAR);
+                        goat.setY(goatElement.getyPos() + goatElement.getyOffset(), Curve.LINEAR);
+                    }
+                    break;
+                case "A_03":
+                    if (wolfElement.containsState("S_01")) {
+                        wolf.setImage(Constants.WOLF_CUT_SPRITE);
+                        wolf.setX(wolfElement.getxPos() + 750, Curve.LINEAR);
+                        wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-            case "A_04" :
-                if (wolfElement.containsState("S_01")){
-                    wolf.setImage(Constants.WOLF_SPRITE);
-                    wolf.setX(wolfElement.getxPos() + wolfElement.getxRank() * 100 , Curve.LINEAR);
-                    wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() , Curve.LINEAR);
+                    }
+                    break;
+                case "A_04":
+                    if (wolfElement.containsState("S_01")) {
+                        wolf.setImage(Constants.WOLF_SPRITE);
+                        wolf.setX(wolfElement.getxPos() + wolfElement.getxRank() * 100, Curve.LINEAR);
+                        wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset(), Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-            case "A_05" :
-                if (cabbageElement.containsState("S_01")){
-                    cabbage.setX(cabbageElement.getxPos() + 750 , Curve.LINEAR);
-                    cabbage.setY(cabbageElement.getyPos() +cabbageElement.getyOffset() -50 , Curve.LINEAR);
+                    }
+                    break;
+                case "A_05":
+                    if (cabbageElement.containsState("S_01")) {
+                        cabbage.setX(cabbageElement.getxPos() + 750, Curve.LINEAR);
+                        cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-            case "A_06" :
-                if (cabbageElement.containsState("S_01")){
-                    cabbage.setX(cabbageElement.getxPos() + cabbageElement.getxRank() * 100 , Curve.LINEAR);
-                    cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() , Curve.LINEAR);
+                    }
+                    break;
+                case "A_06":
+                    if (cabbageElement.containsState("S_01")) {
+                        cabbage.setX(cabbageElement.getxPos() + cabbageElement.getxRank() * 100, Curve.LINEAR);
+                        cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset(), Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-            case "A_07" :
-                if (manElement.containsState("S_01")){
-                    man.setX(manElement.getxPos() + 650 , Curve.LINEAR);
-                    man.setY(manElement.getyPos() + manElement.getyOffset() -50 , Curve.LINEAR);
+                    }
+                    break;
+                case "A_07":
+                    if (manElement.containsState("S_01")) {
+                        man.setX(manElement.getxPos() + 650, Curve.LINEAR);
+                        man.setY(manElement.getyPos() + manElement.getyOffset() - 50, Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-            case "A_08" :
-                if (manElement.containsState("S_01")){
-                    man.setX(manElement.getxPos() + manElement.getxRank() * 100 , Curve.LINEAR);
-                    man.setY(manElement.getyPos() + manElement.getyOffset() , Curve.LINEAR);
+                    }
+                    break;
+                case "A_08":
+                    if (manElement.containsState("S_01")) {
+                        man.setX(manElement.getxPos() + manElement.getxRank() * 100, Curve.LINEAR);
+                        man.setY(manElement.getyPos() + manElement.getyOffset(), Curve.LINEAR);
 
-                }
-                else {
+                    } else {
 
-                }
-                break;
-        }
+                    }
+                    break;
+                case "A_09":
 
+                    int full = 1200;
+                    int semi = 1000;
 
+                    if (manElement.getStates().contains(statesById.get("S_05"))) {
+                        man.setX(manElement.getxPos() + full + 50, Curve.LINEAR);
+                        manElement.removeState(statesById.get("S_01"));
+                        manElement.addState(statesById.get("S_03"));
+
+                        boat.setX(boatElement.getxPos() + full, Curve.LINEAR);
+                        boat.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+                        boat_border.setX(boatElement.getxPos() + full, Curve.LINEAR);
+                        boat_border.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+
+                        if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                            goat.setX(goatElement.getxPos() + full + 50, Curve.LINEAR);
+                            goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
+                            goatElement.removeState(statesById.get("S_01"));
+                            goatElement.addState(statesById.get("S_03"));
+                        } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                            wolf.setX(wolfElement.getxPos() + full + 50, Curve.LINEAR);
+                            wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
+                            wolfElement.removeState(statesById.get("S_01"));
+                            wolfElement.addState(statesById.get("S_03"));
+                        } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                            cabbage.setX(cabbageElement.getxPos() + full + 50, Curve.LINEAR);
+                            cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
+                            wolfElement.removeState(statesById.get("S_01"));
+                            wolfElement.addState(statesById.get("S_03"));
+                        }
+                    } else {
+                        boat.setX(boatElement.getxPos() + semi, Curve.LINEAR);
+                        boat.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+                        boat_border.setX(boatElement.getxPos() + semi, Curve.LINEAR);
+                        boat_border.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+
+                        if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                            goat.setX(goatElement.getxPos() + semi + 50, Curve.LINEAR);
+                            goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                            wolf.setX(wolfElement.getxPos() + semi + 50, Curve.LINEAR);
+                            wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                            cabbage.setX(cabbageElement.getxPos() + semi + 50, Curve.LINEAR);
+                            cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
+                        }
+                    }
+
+                    break;
+                case "A_10":
+
+                    int full_ = 700;
+                    int semi_ = 1000;
+
+                    if (manElement.getStates().contains(statesById.get("S_05"))) {
+                        man.setX(manElement.getxPos() + full_ + 50, Curve.LINEAR);
+
+                        boat.setX(boatElement.getxPos() + full_, Curve.LINEAR);
+                        boat.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+                        boat_border.setX(boatElement.getxPos() + full_, Curve.LINEAR);
+                        boat_border.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+
+                        if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                            goat.setX(goatElement.getxPos() + full_ + 50, Curve.LINEAR);
+                            goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                            wolf.setX(wolfElement.getxPos() + full_ + 50, Curve.LINEAR);
+                            wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                            cabbage.setX(cabbageElement.getxPos() + full_ + 50, Curve.LINEAR);
+                            cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
+                        }
+                    } else {
+                        boat.setX(boatElement.getxPos() + semi_, Curve.LINEAR);
+                        boat.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+                        boat_border.setX(boatElement.getxPos() + semi_, Curve.LINEAR);
+                        boat_border.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
+
+                        if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                            goat.setX(goatElement.getxPos() + semi_ + 50, Curve.LINEAR);
+                            goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                            wolf.setX(wolfElement.getxPos() + semi_ + 50, Curve.LINEAR);
+                            wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
+                        } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                            cabbage.setX(cabbageElement.getxPos() + semi_ + 50, Curve.LINEAR);
+                            cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
+                        }
+                    }
+
+                    break;
+            }
+    }
+
+    public void reinit(){
+        retry = false;
+        died = false;
+
+        // reinit states
+        elementsById = new HashMap<>(elements_start);
+
+        retryText.setAlpha(0.9, Curve.LINEAR)
+                .setScale(0.5, Curve.LINEAR);
+
+        goat.setX(elementsByLibelle.get("GOAT").getX())
+            .setY(elementsByLibelle.get("GOAT").getY());
+
+        wolf.setX(elementsByLibelle.get("WOLF").getX())
+            .setY(elementsByLibelle.get("WOLF").getY());
+
+        cabbage.setX(elementsByLibelle.get("CABBAGE").getX())
+               .setY(elementsByLibelle.get("CABBAGE").getY());
+
+        man.setX(elementsByLibelle.get("MAN").getX())
+           .setY(elementsByLibelle.get("MAN").getY());
+
+        boat.setX(elementsByLibelle.get("BOAT").getX())
+            .setY(elementsByLibelle.get("BOAT").getY());
+
+        boat_border.setX(elementsByLibelle.get("BOAT").getX())
+                   .setY(elementsByLibelle.get("BOAT").getY());
     }
 
     @Override
@@ -408,7 +548,7 @@ public class Referee extends AbstractReferee {
         else {
             String output = outputs.get(0);
 //            System.err.println("Here aviable =" + aviable);
-//            System.err.println("Here output =" + output);
+//            System.err.println("Here output = " + output);
             if (!aviable.contains(output)) {
                 gameManager
                         .loseGame(
@@ -419,17 +559,17 @@ public class Referee extends AbstractReferee {
                                 )
                         );
             }
-            else if (actionsById.get(outputs.get(0)).anyOKForDie()){
-
-                // --> retry
-
-                died = true;
-                // reinit states
-                elementsById = new HashMap<>(elements_start);
+            else if (output.equals("A_00")){
+                System.err.println(output + " => Retry)");
                 return output;
-
+            }
+            else if (actionsById.get(output).anyOKForDie()){
+                System.err.println(output + " => Die)");
+                died = true;
+                return output;
             }
             else {
+                System.err.println(output + " => Normal)");
                 return output;
             }
         }

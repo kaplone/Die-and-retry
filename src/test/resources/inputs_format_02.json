@@ -118,7 +118,7 @@
       "conditionsToDie" : [
         "OR-CONTAINSSTATE-E_01-E_02",
         "OR-CONTAINSSTATE-E_01-E_03",
-        "AND-NOTCONTAINSSTATE-E_01-E_05"
+        "AND-NOTCONTAINSSTATE-E_01-E_04"
       ],
       "element" : "E_01",
       "stateToAdd" : null,
@@ -164,7 +164,7 @@
       "conditionsToDieCount": 2,
       "conditionsToDie": [
         "OR-CONTAINSSTATE-E_01-E_02",
-        "AND-NOTCONTAINSSTATE-E_01-E_05"
+        "AND-NOTCONTAINSSTATE-E_01-E_04"
       ],
       "element": "E_02",
       "stateToAdd": null,
@@ -208,7 +208,7 @@
       "conditionsToDieCount" : 2,
       "conditionsToDie" : [
         "OR-CONTAINSSTATE-E_01-E_03",
-        "AND-NOTCONTAINSSTATE-E_01-E_05"
+        "AND-NOTCONTAINSSTATE-E_01-E_04"
       ],
       "element" : "E_03",
       "stateToAdd" : null,
@@ -270,7 +270,7 @@
       "conditionsToOk" : ["NONE"],
       "conditionsToDieCount" : 1,
       "conditionsToDie" : [
-        "AND-OK-E_04-S_05"
+        "OR-NOT-E_04-S_05"
       ],
       "element" : "E_05",
       "stateToAdd" : {
@@ -293,7 +293,7 @@
       "conditionsToOk" : ["NONE"],
       "conditionsToDieCount" : 1,
       "conditionsToDie" : [
-        "AND-OK-E_04-S_05"
+        "OR-NOT-E_04-S_05"
       ],
       "element" : "E_05",
       "stateToAdd" : {
