@@ -14,14 +14,16 @@ public class ElementModel {
     private String libelle;
 
     private Set<StateModel> states;
+    private Set<StateModel> finalStates;
 
-    public ElementModel(String libelle,  int xPos, int yPos, int xRank, int yOffset, Set<StateModel> states) {
+    public ElementModel(String libelle,  int xPos, int yPos, int xRank, int yOffset, Set<StateModel> states, Set<StateModel> finalStates) {
         this.libelle = libelle;
         this.xPos = xPos;
         this.yPos = yPos;
         this.xRank = xRank;
         this.yOffset = yOffset;
         this.states = states;
+        this.finalStates = finalStates;
 
     }
 
@@ -98,6 +100,14 @@ public class ElementModel {
 
     public void setStates(Set<StateModel> states) {
         this.states = states;
+    }
+
+    public Set<StateModel> getFinalStates() {
+        return finalStates;
+    }
+
+    public void setFinalStates(Set<StateModel> finalStates) {
+        this.finalStates = finalStates;
     }
 
     public String getLibelle() {

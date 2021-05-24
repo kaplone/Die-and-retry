@@ -14,6 +14,14 @@ public class Solution_die_and_retry {
 
         List<Result> results = new ArrayList<>();
 
+        int nbFinish = scanner.nextInt(); // elementsCount
+        scanner.nextLine();
+        for (int i = 0; i < nbFinish; i++){
+            String finishElement = scanner.nextLine();
+            String finishStates = scanner.nextLine();
+            System.err.println("FinishElement = " + finishElement + ", finishStates = " + finishStates);
+        }
+
         while (true){
             // general
             int maxTurns = scanner.nextInt(); // turns to play
@@ -24,21 +32,22 @@ public class Solution_die_and_retry {
             scanner.nextLine();
             for (int i = 0; i < nbElements; i++){
                 String element = scanner.nextLine();
-                System.err.println("Element = " + element);
+                String states = scanner.nextLine();
+                System.err.println("Element = " + element + ", states = " + states);
             }
 
 
             String input = scanner.nextLine();
 
-            List<String> inChoices = Arrays.asList(input.split("#"));
+            List<String> inChoices = Arrays.asList(input.split(" "));
             Collections.shuffle(inChoices);
             System.err.println("Choix possibles = " + inChoices);
 //            System.out.println(inChoices.get(inChoices.size() - 1));
             int indexRandom = Math.max(0, (int) Math.round(Math.random() * inChoices.size() - 1));
 
             System.err.println("index random = " + indexRandom);
-            System.out.println(inChoices.get(indexRandom));
-//            System.out.println(out[turn]);
+//            System.out.println(inChoices.get(indexRandom));
+            System.out.println(out[turn]);
             turn++;
         }
     }

@@ -14,6 +14,13 @@
           "id" : "S_01",
           "libelle" : "WEST"
         }
+      ],
+      "finalStatesCount" : 1,
+      "finalStates" : [
+        {
+          "id" : "S_03",
+          "libelle" : "EAST"
+        }
       ]
     },
     { "xPos" : 100,
@@ -27,6 +34,13 @@
         {
           "id" : "S_01",
           "libelle" : "WEST"
+        }
+      ],
+      "finalStatesCount" : 1,
+      "finalStates" : [
+        {
+          "id" : "S_03",
+          "libelle" : "EAST"
         }
       ]
     }
@@ -43,6 +57,13 @@
           "id" : "S_01",
           "libelle" : "WEST"
         }
+      ],
+      "finalStatesCount" : 1,
+      "finalStates" : [
+        {
+          "id" : "S_03",
+          "libelle" : "EAST"
+        }
       ]
     }
   ,
@@ -57,6 +78,13 @@
         {
           "id" : "S_01",
           "libelle" : "WEST"
+        }
+      ],
+      "finalStatesCount" : 1,
+      "finalStates" : [
+        {
+          "id" : "S_03",
+          "libelle" : "EAST"
         }
       ]
     }
@@ -76,6 +104,13 @@
         {
           "id" : "S_02",
           "libelle" : "BOUND"
+        }
+      ],
+      "finalStatesCount" : 1,
+      "finalStates" : [
+        {
+          "id" : "S_03",
+          "libelle" : "EAST"
         }
       ]
     }

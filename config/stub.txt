@@ -1,8 +1,19 @@
-read eggsCount:int
-loop eggsCount read eggX:int eggY:int eggQuantity:int
+read finishelementsCount:int
+loop finishElementsCount read finishElement:word(4) finishStates:word(32)
 gameloop
-read fishX:int fishY:int
-write STILL
+read remainingTurns:int
+read elementsCount:int
+loop elementsCount read element:word(4) states:word(10)
+read actions:word(256)
+write Action
+
+INPUT
+finishElement: Element to modify
+finishStates: States expected to complete the game
+remainingTurns: Turns remaining to solve the game
+element: id for this element
+states: ids for states of this element. Separator is a space
+actions: ids for actions allowed this turn. Separator is a space
 
 OUTPUT
-UP | DOWN | STILL
+Any action provided in input

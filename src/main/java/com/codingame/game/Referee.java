@@ -60,6 +60,7 @@ public class Referee extends AbstractReferee {
     private List<ActionModel> actions;
 
     public static Map<String, StateModel> statesById;
+    public static Map<String, Set<StateModel>> finalStatesById;
 
     public static ActionModel dieAndRetry;
 
@@ -74,6 +75,7 @@ public class Referee extends AbstractReferee {
         actions = new ArrayList<>();
         actionsById = new HashMap<>();
         statesById = new HashMap<>();
+        finalStatesById = new HashMap<>();
 
         dieAndRetry = new ActionModel("A_00", "DIE AND RETRY", null, null, null, null, null, null);
 
@@ -112,7 +114,6 @@ public class Referee extends AbstractReferee {
             int statesCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex).split(" ")[6]);
 
             Set<StateModel> states = new HashSet<>();
-
             for (int j = 0; j < statesCount; j++){
                 readLineIndex++; //  loop
                 String idState = gameManager.getTestCaseInput().get(readLineIndex).split(" ")[0];
@@ -121,10 +122,21 @@ public class Referee extends AbstractReferee {
                 states.add(stateModel);
 
                 statesById.put(idState, stateModel);
-
             }
 
-            ElementModel element = new ElementModel(libelle ,xPos, yPos, xRank, yOffset, states);
+            readLineIndex++;
+            int finalStatesCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
+            Set<StateModel> finalStates = new HashSet<>();
+            for (int j = 0; j < finalStatesCount; j++){
+                readLineIndex++; //  loop
+                String idState = gameManager.getTestCaseInput().get(readLineIndex).split(" ")[0];
+                String libelleState = gameManager.getTestCaseInput().get(readLineIndex).split(" ")[1];
+                StateModel stateModel = new StateModel(idState, libelleState);
+                finalStates.add(stateModel);
+            }
+            finalStatesById.put(id, finalStates);
+
+            ElementModel element = new ElementModel(libelle ,xPos, yPos, xRank, yOffset, states, finalStates);
             elementsById.put(id, element);
 
             if (libelle != null){
@@ -191,7 +203,7 @@ public class Referee extends AbstractReferee {
         elements_start = new HashMap<>();
         for (Map.Entry<String, ElementModel> e : elementsById.entrySet()){
             Set<StateModel> stateModels = new HashSet<>(e.getValue().getStates());
-            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels);
+            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels, e.getValue().getFinalStates());
             elements_start.put(e.getKey(), elementModel);
         }
 
@@ -254,6 +266,16 @@ public class Referee extends AbstractReferee {
                 statesById.put(idState, stateModel);
             }
         }
+
+        // send finish states count
+        gameManager.getPlayer().sendInputLine("" + finalStatesById.size());
+        for (Map.Entry<String, Set<StateModel>> s : finalStatesById.entrySet()){
+            // send finish element
+            gameManager.getPlayer().sendInputLine(s.getKey());
+            // send finish states
+            gameManager.getPlayer().sendInputLine(s.getValue().stream().map(StateModel::getId).collect(Collectors.joining(" ")));
+        }
+
     }
 
     private void affEnd(){
@@ -291,13 +313,16 @@ public class Referee extends AbstractReferee {
         //System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
 
         aviable = actionsPossibles.stream().map(ActionModel::getId).collect(Collectors.toList());
-        // send states
+
         gameManager.getPlayer().sendInputLine("" + elementsById.size());
         for (Map.Entry<String, ElementModel> e : elementsById.entrySet()){
-            gameManager.getPlayer().sendInputLine(e.getKey() + "*"+ e.getValue().getStates().stream().map(a -> a.getId()).collect(Collectors.joining("#")));
+            // send element
+            gameManager.getPlayer().sendInputLine(e.getKey());
+            // send states
+            gameManager.getPlayer().sendInputLine(e.getValue().getStates().stream().map(a -> a.getId()).collect(Collectors.joining(" ")));
         }
         // send actions
-        gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining("#")));
+        gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining(" ")));
 
        updateView();
 
@@ -636,7 +661,7 @@ public class Referee extends AbstractReferee {
         elementsById = new HashMap<>();
         for (Map.Entry<String, ElementModel> e : elements_start.entrySet()){
             Set<StateModel> stateModels = new HashSet<>(e.getValue().getStates());
-            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels);
+            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels, e.getValue().getFinalStates());
             elementsById.put(e.getKey(), elementModel);
         }
 

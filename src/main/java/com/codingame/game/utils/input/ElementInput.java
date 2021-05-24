@@ -12,6 +12,8 @@ public class ElementInput {
     private String libelle;
     private int statesCount;
     private Set<StateInput> states;
+    private int finalStatesCount;
+    private Set<StateInput> finalStates;
 
     public int getxPos() {
         return xPos;
@@ -77,6 +79,22 @@ public class ElementInput {
         this.statesCount = statesCount;
     }
 
+    public int getFinalStatesCount() {
+        return finalStatesCount;
+    }
+
+    public void setFinalStatesCount(int finalStatesCount) {
+        this.finalStatesCount = finalStatesCount;
+    }
+
+    public Set<StateInput> getFinalStates() {
+        return finalStates;
+    }
+
+    public void setFinalStates(Set<StateInput> finalStates) {
+        this.finalStates = finalStates;
+    }
+
     @Override
     public String toString() {
         return id + " " +
@@ -86,6 +104,8 @@ public class ElementInput {
                xRank + " " +
                yOffset + " " +
                statesCount +
-               states.stream().map(StateInput::toString).collect(Collectors.joining("\n", "\n", ""));
+               states.stream().map(StateInput::toString).collect(Collectors.joining("\n", "\n", "\n")) +
+               finalStatesCount +
+               finalStates.stream().map(StateInput::toString).collect(Collectors.joining("\n", "\n", ""));
     }
 }
