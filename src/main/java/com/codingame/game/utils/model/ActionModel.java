@@ -169,6 +169,11 @@ public class ActionModel {
                 case "NOTSAMESTATE" : ElementModel elementModel3 = Referee.elementsById.get(element);
                     cond = !elementModel.containsState(elementModel3.getStates().iterator().next().getId());
                     break;
+                case "CONTAINSSTATE" : ElementModel elementModel4 = Referee.elementsById.get(state);
+                    System.err.println(elementModel.getLibelle() + ": " + elementModel.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    System.err.println(elementModel4.getLibelle() + ": " + elementModel4.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    cond = elementModel4.containsState(elementModel.getStates().iterator().next().getId());
+                    break;
             }
 
 

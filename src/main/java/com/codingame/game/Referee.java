@@ -264,6 +264,7 @@ public class Referee extends AbstractReferee {
     @Override
     public void gameTurn(int turn) {
 
+        // send turns to play
         gameManager.getPlayer().sendInputLine("" + remainingTurns);
         System.err.println("Died = " + died + ", Finish =" + finish);
 
@@ -290,6 +291,12 @@ public class Referee extends AbstractReferee {
         //System.err.println("Actions possibles = " + actionsPossibles.stream().map(ActionModel::getLibelle).collect(Collectors.joining("\n")));
 
         aviable = actionsPossibles.stream().map(ActionModel::getId).collect(Collectors.toList());
+        // send states
+        gameManager.getPlayer().sendInputLine("" + elementsById.size());
+        for (Map.Entry<String, ElementModel> e : elementsById.entrySet()){
+            gameManager.getPlayer().sendInputLine(e.getKey() + "*"+ e.getValue().getStates().stream().map(a -> a.getId()).collect(Collectors.joining("#")));
+        }
+        // send actions
         gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining("#")));
 
        updateView();

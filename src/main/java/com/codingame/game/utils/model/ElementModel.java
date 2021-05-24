@@ -21,7 +21,6 @@ public class ElementModel {
         this.yPos = yPos;
         this.xRank = xRank;
         this.yOffset = yOffset;
-        this.states = new HashSet<>();
         this.states = states;
 
     }
