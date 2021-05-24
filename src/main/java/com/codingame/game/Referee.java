@@ -266,7 +266,7 @@ public class Referee extends AbstractReferee {
         aviable = actionsPossibles.stream().map(ActionModel::getId).collect(Collectors.toList());
         gameManager.getPlayer().sendInputLine(aviable.stream().collect(Collectors.joining("#")));
 
-        updateView();
+       updateView();
 
         gameManager.getPlayer().execute();
 
@@ -298,8 +298,6 @@ public class Referee extends AbstractReferee {
 
             }
 
-
-
             remainingTurns--;
 
             if (remainingTurns < 0){
@@ -307,6 +305,7 @@ public class Referee extends AbstractReferee {
                 gameManager.loseGame("No remaining turn");
             }
 
+            //updateStates();
 
            // Action action = Action.valueOf(output.toUpperCase());
            // checkInvalidAction(action);
@@ -319,9 +318,104 @@ public class Referee extends AbstractReferee {
 
     }
 
+    public static void updateStates(String output){
+
+        System.err.println("updateStates():: Request = " + output);
+
+        ElementModel goatElement = elementsById.get("E_01");
+        ElementModel wolfElement = elementsById.get("E_02");
+        ElementModel cabbageElement = elementsById.get("E_03");
+        ElementModel manElement = elementsById.get("E_04");
+        ElementModel boatElement = elementsById.get("E_05");
+        switch (output) {
+            case "A_00":
+                //reinit();
+                break;
+            case "A_01":
+                goatElement.addState(statesById.get("S_05"));
+                break;
+            case "A_02":
+                goatElement.removeState(statesById.get("S_05"));
+                break;
+            case "A_03":
+                wolfElement.addState(statesById.get("S_05"));
+                break;
+            case "A_04":
+                wolfElement.removeState(statesById.get("S_05"));
+                break;
+            case "A_05":
+                cabbageElement.addState(statesById.get("S_05"));
+                break;
+            case "A_06":
+                cabbageElement.removeState(statesById.get("S_05"));
+                break;
+            case "A_07":
+                manElement.addState(statesById.get("S_05"));
+                break;
+            case "A_08":
+                manElement.removeState(statesById.get("S_05"));
+                break;
+            case "A_09":
+                if (manElement.getStates().contains(statesById.get("S_05"))) {
+                    manElement.removeState(statesById.get("S_01"));
+                    manElement.addState(statesById.get("S_03"));
+
+                    if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                        goatElement.removeState(statesById.get("S_01"));
+                        goatElement.addState(statesById.get("S_03"));
+                    } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                        wolfElement.removeState(statesById.get("S_01"));
+                        wolfElement.addState(statesById.get("S_03"));
+                    } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                        wolfElement.removeState(statesById.get("S_01"));
+                        wolfElement.addState(statesById.get("S_03"));
+                    }
+                } else {
+                    if (goatElement.getStates().contains(statesById.get("S_05"))) {
+
+                    } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+
+                    } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+
+                    }
+                }
+
+                break;
+            case "A_10":
+
+                if (manElement.getStates().contains(statesById.get("S_05"))) {
+                    manElement.removeState(statesById.get("S_03"));
+                    manElement.addState(statesById.get("S_01"));
+
+                    if (goatElement.getStates().contains(statesById.get("S_05"))) {
+                        goatElement.removeState(statesById.get("S_03"));
+                        goatElement.addState(statesById.get("S_01"));
+                    } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+                        wolfElement.removeState(statesById.get("S_03"));
+                        wolfElement.addState(statesById.get("S_01"));
+                    } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+                        wolfElement.removeState(statesById.get("S_03"));
+                        wolfElement.addState(statesById.get("S_01"));
+                    }
+                } else {
+
+                    if (goatElement.getStates().contains(statesById.get("S_05"))) {
+
+                    } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
+
+                    } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
+
+                    }
+                }
+
+                break;
+        }
+
+    }
+
     public void updateView(){
 
-        System.err.println("Request = " + request + "  Died = " + died + "    Retry = " + retry);
+        System.err.println("updateView():: Request = " + request + "  Died = " + died + "    Retry = " + retry);
 
             retryText.setAlpha(0, Curve.LINEAR)
                     .setScale(0.2, Curve.LINEAR);
@@ -341,7 +435,8 @@ public class Referee extends AbstractReferee {
                         goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
 
                     } else {
-
+                        goat.setX(goatElement.getxPos() + 1250, Curve.LINEAR);
+                        goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
                     }
                     break;
                 case "A_02":
@@ -355,59 +450,59 @@ public class Referee extends AbstractReferee {
                     }
                     break;
                 case "A_03":
+                    wolf.setImage(Constants.WOLF_CUT_SPRITE);
                     if (wolfElement.containsState("S_01")) {
-                        wolf.setImage(Constants.WOLF_CUT_SPRITE);
                         wolf.setX(wolfElement.getxPos() + 750, Curve.LINEAR);
                         wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
-
                     } else {
-
+                        wolf.setX(wolfElement.getxPos() + 1250, Curve.LINEAR);
+                        wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
                     }
                     break;
                 case "A_04":
+                    wolf.setImage(Constants.WOLF_SPRITE);
                     if (wolfElement.containsState("S_01")) {
-                        wolf.setImage(Constants.WOLF_SPRITE);
                         wolf.setX(wolfElement.getxPos() + wolfElement.getxRank() * 100, Curve.LINEAR);
                         wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset(), Curve.LINEAR);
-
                     } else {
-
+                        wolf.setX(wolfElement.getxPos() + 1500 + wolfElement.getxRank() * 100, Curve.LINEAR);
+                        wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset(), Curve.LINEAR);
                     }
                     break;
                 case "A_05":
                     if (cabbageElement.containsState("S_01")) {
                         cabbage.setX(cabbageElement.getxPos() + 750, Curve.LINEAR);
                         cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
-
                     } else {
-
+                        cabbage.setX(cabbageElement.getxPos() + 1250, Curve.LINEAR);
+                        cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
                     }
                     break;
                 case "A_06":
                     if (cabbageElement.containsState("S_01")) {
                         cabbage.setX(cabbageElement.getxPos() + cabbageElement.getxRank() * 100, Curve.LINEAR);
                         cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset(), Curve.LINEAR);
-
                     } else {
-
+                        cabbage.setX(cabbageElement.getxPos() + 1500 + cabbageElement.getxRank() * 100, Curve.LINEAR);
+                        cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset(), Curve.LINEAR);
                     }
                     break;
                 case "A_07":
                     if (manElement.containsState("S_01")) {
                         man.setX(manElement.getxPos() + 650, Curve.LINEAR);
                         man.setY(manElement.getyPos() + manElement.getyOffset() - 50, Curve.LINEAR);
-
                     } else {
-
+                        man.setX(manElement.getxPos() + 1150, Curve.LINEAR);
+                        man.setY(manElement.getyPos() + manElement.getyOffset() - 50, Curve.LINEAR);
                     }
                     break;
                 case "A_08":
                     if (manElement.containsState("S_01")) {
                         man.setX(manElement.getxPos() + manElement.getxRank() * 100, Curve.LINEAR);
                         man.setY(manElement.getyPos() + manElement.getyOffset(), Curve.LINEAR);
-
                     } else {
-
+                        man.setX(manElement.getxPos() + 1500 + manElement.getxRank() * 100, Curve.LINEAR);
+                        man.setY(manElement.getyPos() + manElement.getyOffset(), Curve.LINEAR);
                     }
                     break;
                 case "A_09":
@@ -417,8 +512,6 @@ public class Referee extends AbstractReferee {
 
                     if (manElement.getStates().contains(statesById.get("S_05"))) {
                         man.setX(manElement.getxPos() + full + 50, Curve.LINEAR);
-                        manElement.removeState(statesById.get("S_01"));
-                        manElement.addState(statesById.get("S_03"));
 
                         boat.setX(boatElement.getxPos() + full, Curve.LINEAR);
                         boat.setY(boatElement.getyPos() + boatElement.getyOffset(), Curve.LINEAR);
@@ -428,18 +521,12 @@ public class Referee extends AbstractReferee {
                         if (goatElement.getStates().contains(statesById.get("S_05"))) {
                             goat.setX(goatElement.getxPos() + full + 50, Curve.LINEAR);
                             goat.setY(goatElement.getyPos() + goatElement.getyOffset() - 50, Curve.LINEAR);
-                            goatElement.removeState(statesById.get("S_01"));
-                            goatElement.addState(statesById.get("S_03"));
                         } else if (wolfElement.getStates().contains(statesById.get("S_05"))) {
                             wolf.setX(wolfElement.getxPos() + full + 50, Curve.LINEAR);
                             wolf.setY(wolfElement.getyPos() + wolfElement.getyOffset() - 50, Curve.LINEAR);
-                            wolfElement.removeState(statesById.get("S_01"));
-                            wolfElement.addState(statesById.get("S_03"));
                         } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
                             cabbage.setX(cabbageElement.getxPos() + full + 50, Curve.LINEAR);
                             cabbage.setY(cabbageElement.getyPos() + cabbageElement.getyOffset() - 50, Curve.LINEAR);
-                            wolfElement.removeState(statesById.get("S_01"));
-                            wolfElement.addState(statesById.get("S_03"));
                         }
                     } else {
                         boat.setX(boatElement.getxPos() + semi, Curve.LINEAR);
@@ -547,8 +634,8 @@ public class Referee extends AbstractReferee {
 
         else {
             String output = outputs.get(0);
-//            System.err.println("Here aviable =" + aviable);
-//            System.err.println("Here output = " + output);
+            System.err.println("Here aviable =" + aviable);
+            System.err.println("Here output = " + output);
             if (!aviable.contains(output)) {
                 gameManager
                         .loseGame(

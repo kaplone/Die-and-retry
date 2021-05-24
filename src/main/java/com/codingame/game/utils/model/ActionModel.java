@@ -1,5 +1,6 @@
 package com.codingame.game.utils.model;
 
+import com.codingame.game.Player;
 import com.codingame.game.Referee;
 
 import java.util.List;
@@ -31,6 +32,8 @@ public class ActionModel {
         boolean res = false;
         boolean cond = false;
 
+        Referee.updateStates(this.id);
+
         for (String s : conditionsToDie.stream().filter(c -> !c.equals("NONE")).collect(Collectors.toList())){
             //System.err.println("Loop ActionForDie = " + s);
             String booleanOperator = s.split("-")[0];
@@ -49,27 +52,29 @@ public class ActionModel {
                     cond = elementModel.getStates().size() == elementModel1.getStates().size() && elementModel1.containsState(elementModel.getStates().iterator().next().getId());
                     break;
                 case "CONTAINSSTATE" : ElementModel elementModel2 = Referee.elementsById.get(state);
-                    System.err.println(elementModel.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
-                    System.err.println(elementModel2.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    System.err.println(elementModel.getLibelle() + ": " + elementModel.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    System.err.println(elementModel2.getLibelle() + ": " + elementModel2.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
                     cond = elementModel.getStates().size() == elementModel2.getStates().size() && elementModel2.containsState(elementModel.getStates().iterator().next().getId());
                     break;
                 case "NOTSAMESTATE" : ElementModel elementModel3 = Referee.elementsById.get(state);
                     cond = elementModel.getStates().size() == elementModel3.getStates().size() && !elementModel3.containsState(elementModel.getStates().iterator().next().getId());
                     break;
                 case "NOTCONTAINSSTATE" : ElementModel elementModel4 = Referee.elementsById.get(state);
-                    cond = elementModel.getStates().size() == elementModel4.getStates().size() && !elementModel4.containsState(elementModel.getStates().iterator().next().getId());
+                    System.err.println(elementModel.getLibelle() + ": " + elementModel.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    System.err.println(elementModel4.getLibelle() + ": " + elementModel4.getStates().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                    cond = elementModel.getStates().size() != elementModel4.getStates().size() || !elementModel4.containsState(elementModel.getStates().iterator().next().getId());
                     break;
             }
 
-            if (cond){
-                System.err.println("condition = " + condition + " Element = " + elementModel.getLibelle() + " State = " + state + "  =>  cond :: " + cond);
+            if (true){
+                System.err.println("condition = " + condition + " Element = " + elementModel.getLibelle() + " State = " + elementModel.getStates().iterator().next().getId() + "  =>  cond :: " + cond);
             }
 
 
             res = booleanOperator.equals("AND") ? res && cond : res || cond;
         }
-        if (res){
-            System.err.println("Die :: " + libelle);
+        if(true){
+            System.err.println("Die :: " + res + " " +  libelle);
         }
 
 
