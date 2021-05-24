@@ -112,8 +112,13 @@
         "AND-OK-E_01-S_05",
         "AND-OK-E_05-S_02"
       ],
-      "conditionsToOkCount" : 1,
-      "conditionsToOk" : ["NONE"],
+      "conditionsToOkCount" : 4,
+      "conditionsToOk" : [
+        "AND-OK-E_01-S_03",
+        "AND-OK-E_02-S_03",
+        "AND-OK-E_03-S_03",
+        "AND-OK-E_04-S_03"
+      ],
       "conditionsToDieCount" : 5,
       "conditionsToDie" : [
         "OR-CONTAINSSTATE-E_01-E_02",

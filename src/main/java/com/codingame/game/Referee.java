@@ -25,6 +25,7 @@ public class Referee extends AbstractReferee {
 
     private boolean died = false;
     private boolean retry = false;
+    private boolean finish = false;
 
     public static Map<Integer, Choice> choices;
     static List<String> aviable = new ArrayList<>();
@@ -43,6 +44,7 @@ public class Referee extends AbstractReferee {
     private static Sprite boat_border;
 
     private static Sprite retryText;
+    private static Sprite endText;
 
     private  static String request = "";
     private  static String response = "";
@@ -75,6 +77,14 @@ public class Referee extends AbstractReferee {
         dieAndRetry = new ActionModel("A_00", "DIE AND RETRY", null, null, null, null, null, null);
 
         retryText = graphicEntityModule.createSprite().setImage(Constants.RETRY_SPRITE)
+                .setScale(0.2)
+                .setAlpha(0)
+                .setX(graphicEntityModule.getWorld().getWidth()/2)
+                .setY(graphicEntityModule.getWorld().getHeight()/2)
+                .setAnchor(.5)
+                .setZIndex(10000);
+
+        endText = graphicEntityModule.createSprite().setImage(Constants.FINISH_SPRITE)
                 .setScale(0.2)
                 .setAlpha(0)
                 .setX(graphicEntityModule.getWorld().getWidth()/2)
@@ -239,17 +249,26 @@ public class Referee extends AbstractReferee {
         }
     }
 
+    private void affEnd(){
+        endText.setAlpha(0.9, Curve.LINEAR)
+                .setScale(0.5, Curve.LINEAR);
+    }
+
     @Override
     public void gameTurn(int turn) {
 
         gameManager.getPlayer().sendInputLine("" + remainingTurns);
-
+        System.err.println("Died = " + died + ", Finish =" + finish);
 
         List<ActionModel> actionsPossibles = new ArrayList<>();
 
         if (died){
             actionsPossibles.add(dieAndRetry);
             died = false;
+        }
+        else if(finish){
+            System.err.println("Enter Finish loop");
+            onEnd();
         }
         else {
             for (ActionModel action : actions){
@@ -268,53 +287,54 @@ public class Referee extends AbstractReferee {
 
        updateView();
 
-        gameManager.getPlayer().execute();
+       if(!finish){
+           gameManager.getPlayer().execute();
 
-        try {
-            List<String> outputs = gameManager.getPlayer().getOutputs();
+           try {
+               List<String> outputs = gameManager.getPlayer().getOutputs();
 
-            String output = checkOutput(outputs);
+               String output = checkOutput(outputs);
 
-            if (output == null){
-                throw new TimeoutException();
-            }
+               if (output == null){
+                   throw new TimeoutException();
+               }
 
-            System.err.println("Output = " + output + " / Died = " + died);
+               System.err.println("Output = " + output + " / Died = " + died);
 
-            if (!died && !outputs.get(0).equals("A_00")) {
-                //System.err.println("Process Output = " + output);
-                ActionModel actionOutput = actionsById.get(output);
-                ElementModel elementOutput = elementsById.get(actionOutput.getElement());
-                StateModel stateOutputToAdd = statesById.get(actionOutput.getStateToAdd());
-                elementOutput.addState(stateOutputToAdd);
-                elementOutput.removeState(statesById.get(actionOutput.getStateToRemove()));
+               if (!died && !outputs.get(0).equals("A_00")) {
+                   //System.err.println("Process Output = " + output);
+                   ActionModel actionOutput = actionsById.get(output);
+                   ElementModel elementOutput = elementsById.get(actionOutput.getElement());
+                   StateModel stateOutputToAdd = statesById.get(actionOutput.getStateToAdd());
+                   elementOutput.addState(stateOutputToAdd);
+                   elementOutput.removeState(statesById.get(actionOutput.getStateToRemove()));
 
-                //System.err.println(elementOutput.getStates().stream().map(stateModel -> stateModel.getLibelle()).collect(Collectors.toList()));
-                request = outputs.get(0);
+                   //System.err.println(elementOutput.getStates().stream().map(stateModel -> stateModel.getLibelle()).collect(Collectors.toList()));
+                   request = outputs.get(0);
 
-            }
-            else {
-                request = outputs.get(0);
+               }
+               else {
+                   request = outputs.get(0);
 
-            }
+               }
 
-            remainingTurns--;
+               remainingTurns--;
 
-            if (remainingTurns < 0){
-                response = "No remaining turn";
-                gameManager.loseGame("No remaining turn");
-            }
+               if (remainingTurns < 0){
+                   response = "No remaining turn";
+                   gameManager.loseGame("No remaining turn");
+               }
 
-            //updateStates();
+               //updateStates();
 
-           // Action action = Action.valueOf(output.toUpperCase());
-           // checkInvalidAction(action);
+               // Action action = Action.valueOf(output.toUpperCase());
+               // checkInvalidAction(action);
 
 
-        } catch (TimeoutException e) {
-            gameManager.loseGame("Timeout!");
-        }
-
+           } catch (TimeoutException e) {
+               gameManager.loseGame("Timeout!");
+           }
+       }
 
     }
 
@@ -367,8 +387,8 @@ public class Referee extends AbstractReferee {
                         wolfElement.removeState(statesById.get("S_01"));
                         wolfElement.addState(statesById.get("S_03"));
                     } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
-                        wolfElement.removeState(statesById.get("S_01"));
-                        wolfElement.addState(statesById.get("S_03"));
+                        cabbageElement.removeState(statesById.get("S_01"));
+                        cabbageElement.addState(statesById.get("S_03"));
                     }
                 } else {
                     if (goatElement.getStates().contains(statesById.get("S_05"))) {
@@ -394,8 +414,8 @@ public class Referee extends AbstractReferee {
                         wolfElement.removeState(statesById.get("S_03"));
                         wolfElement.addState(statesById.get("S_01"));
                     } else if (cabbageElement.getStates().contains(statesById.get("S_05"))) {
-                        wolfElement.removeState(statesById.get("S_03"));
-                        wolfElement.addState(statesById.get("S_01"));
+                        cabbageElement.removeState(statesById.get("S_03"));
+                        cabbageElement.addState(statesById.get("S_01"));
                     }
                 } else {
 
@@ -623,6 +643,8 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void onEnd() {
+        affEnd();
+        gameManager.winGame("Done !");
         //gameManager.putMetadata("eggs", String.valueOf(eggsCollected));
     }
 
@@ -636,6 +658,8 @@ public class Referee extends AbstractReferee {
             String output = outputs.get(0);
             System.err.println("Here aviable =" + aviable);
             System.err.println("Here output = " + output);
+            updateStates(output);
+
             if (!aviable.contains(output)) {
                 gameManager
                         .loseGame(
@@ -653,6 +677,11 @@ public class Referee extends AbstractReferee {
             else if (actionsById.get(output).anyOKForDie()){
                 System.err.println(output + " => Die)");
                 died = true;
+                return output;
+            }
+            else if (actionsById.get(output).allOKForOk()){
+                System.err.println(output + " => Finish)");
+                finish = true;
                 return output;
             }
             else {

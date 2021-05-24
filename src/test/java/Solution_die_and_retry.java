@@ -12,7 +12,7 @@ public class Solution_die_and_retry {
         Scanner scanner = new Scanner(System.in);
 
         int turn = 0;
-        String[] out = new String[] {"A_01", "A_07", "A_09", "A_02", "A_10", "A_03", "A_09", "A_08", "A_04", "A_01", "A_07", "A_10", "A_02", "A_00", "A_05", "A_07", "A_09"};
+        String[] out = new String[] {"A_01", "A_07", "A_09", "A_02", "A_10", "A_03", "A_09", "A_08", "A_04", "A_01", "A_07", "A_10", "A_08", "A_02", "A_05", "A_07", "A_09", "A_06", "A_10", "A_01", "A_09", "A_08", "A_02"};
 
         while (true){
             // general
