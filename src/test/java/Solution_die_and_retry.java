@@ -26,8 +26,8 @@ public class Solution_die_and_retry {
 //            System.out.println(inChoices.get(inChoices.size() - 1));
             int indexRandom = Math.max(0, (int) Math.round(Math.random() * inChoices.size() - 1));
             System.err.println("index random = " + indexRandom);
-//            System.out.println(inChoices.get(indexRandom));
-            System.out.println(out[turn]);
+            System.out.println(inChoices.get(indexRandom));
+            //System.out.println(out[turn]);
             turn++;
         }
 

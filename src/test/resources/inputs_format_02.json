@@ -1,5 +1,5 @@
 {
-  "maxTurns" : 100,
+  "maxTurns" : 250,
   "elementsCount" : 5,
   "elements" : [
     { "xPos" : 100,

@@ -65,6 +65,7 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void init() {
+        System.err.println("Init::");
         gameManager.setFrameDuration(500);
 
         choices = new HashMap<>();
@@ -94,6 +95,7 @@ public class Referee extends AbstractReferee {
 
         // general definitions
         Integer maxTurnsCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
+        gameManager.setMaxTurns(maxTurnsCount + 1);
         remainingTurns = maxTurnsCount;
         readLineIndex++; // 1
         Integer elementsCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
@@ -185,8 +187,13 @@ public class Referee extends AbstractReferee {
 
         // Draw background
         graphicEntityModule.createSprite().setImage(Constants.RIVER_SPRITE);
-        elements_start = new HashMap<>(elementsById);
 
+        elements_start = new HashMap<>();
+        for (Map.Entry<String, ElementModel> e : elementsById.entrySet()){
+            Set<StateModel> stateModels = new HashSet<>(e.getValue().getStates());
+            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels);
+            elements_start.put(e.getKey(), elementModel);
+        }
 
         Integer actionsCount = Integer.parseInt(gameManager.getTestCaseInput().get(readLineIndex));
         readLineIndex++;
@@ -613,11 +620,22 @@ public class Referee extends AbstractReferee {
     }
 
     public void reinit(){
+        System.err.println("Reinit::");
         retry = false;
         died = false;
 
         // reinit states
         elementsById = new HashMap<>(elements_start);
+        elementsById = new HashMap<>();
+        for (Map.Entry<String, ElementModel> e : elements_start.entrySet()){
+            Set<StateModel> stateModels = new HashSet<>(e.getValue().getStates());
+            ElementModel elementModel = new ElementModel(e.getValue().getLibelle(),e.getValue().getxPos(), e.getValue().getyPos(), e.getValue().getxRank(), e.getValue().getyOffset(), stateModels);
+            elementsById.put(e.getKey(), elementModel);
+        }
+
+        for (ElementModel elementModel : elementsById.values()){
+            System.err.println(elementModel.getLibelle() + " " + elementModel.getStates().stream().map(s -> s.getLibelle()).collect(Collectors.toList()));
+        }
 
         retryText.setAlpha(0.9, Curve.LINEAR)
                 .setScale(0.5, Curve.LINEAR);
@@ -643,8 +661,14 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void onEnd() {
-        affEnd();
-        gameManager.winGame("Done !");
+        if (finish){
+            affEnd();
+            gameManager.winGame("Done !");
+        }
+        else {
+            gameManager.loseGame("Too late !");
+        }
+
         //gameManager.putMetadata("eggs", String.valueOf(eggsCollected));
     }
 
